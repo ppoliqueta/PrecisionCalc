@@ -61,3 +61,10 @@ sample_size_binomial (p=0.5, epsilon=0.04)
 ## -----------------------------------------------------------------------------
 bootstrap_precision(picinguaba$Lumbrineris, epsilon_rel = 0.2)
 
+## ----finite_exemple, echo=TRUE, warning=FALSE, message=FALSE------------------
+
+n0 <- 50   # sample size from relative/absolute precision
+N  <- 200  # total population size
+
+finite_population_correction(n0, N)
+

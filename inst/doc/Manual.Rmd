@@ -391,7 +391,16 @@ If population size $N_{\text{pop}}$ is provided:
 $$
 n_{\text{adj}} = \frac{n_0}{1 + \frac{n_0 - 1}{N_{\text{pop}}}}
 $$
-\
+
+Thus, the function `finite_population_correction` require only two arguments: `n0` = number of sample size when population is cosidered infinte and `N` = size of the finite population, the number os samples that will "cover" all the population in the survey. 
+
+```{r finite_exemple, echo=TRUE, warning=FALSE, message=FALSE}
+
+n0 <- 50   # sample size from relative/absolute precision
+N  <- 200  # total population size
+
+finite_population_correction(n0, N)
+```
 
 ### REFERENCES 
 

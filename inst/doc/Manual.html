@@ -1368,8 +1368,17 @@ the function for calculation (Cochran, 1977) afterwards is also provided
 here if necessary.</p>
 <p>If population size <span class="math inline">\(N_{\text{pop}}\)</span> is provided: <span class="math display">\[
 n_{\text{adj}} = \frac{n_0}{1 + \frac{n_0 - 1}{N_{\text{pop}}}}
-\]</span><br />
-</p>
+\]</span></p>
+<p>Thus, the function <code>finite_population_correction</code> require
+only two arguments: <code>n0</code> = number of sample size when
+population is cosidered infinte and <code>N</code> = size of the finite
+population, the number os samples that will “cover” all the population
+in the survey.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>n0 <span class="ot">&lt;-</span> <span class="dv">50</span>   <span class="co"># sample size from relative/absolute precision</span></span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>N  <span class="ot">&lt;-</span> <span class="dv">200</span>  <span class="co"># total population size</span></span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a><span class="fu">finite_population_correction</span>(n0, N)</span></code></pre></div>
+<pre><code>## [1] 41</code></pre>
 </div>
 </div>
 <div id="references" class="section level3">
