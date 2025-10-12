@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 ### Introduction
 
-The `PrecisionCalc` package enables students and reserarches to determine the sample size required to achieve a specified precision for mean estimation. It is designed for zero or positive data, which commonly arise in ecological, environmental, and biological studies. Typical applications include counts of organisms (e.g., the number of polychaetes per sediment sample, fish abundance in a survey, number of small mammals per trap), density measurements (e.g., individuals per square meter), occurrence data (e.g., presence/absence or proportion of sites with a species), and percentage data (e.g., sediment organic matter, calcium carbonate content, or percent cover of vegetation)
+The `PrecisionCalc` package enables students and researchers to determine the sample size required to achieve a specified precision for mean estimation. It is designed for zero or positive data, which commonly arise in ecological, environmental, and biological studies. Typical applications include counts of organisms (e.g., the number of polychaetes per sediment sample, fish abundance in a survey, number of small mammals per trap), density measurements (e.g., individuals per square meter), occurrence data (e.g., presence/absence or proportion of sites with a species), and percentage data (e.g., sediment organic matter, calcium carbonate content, or percent cover of vegetation)
 
 The package is also suitable for a wide range of environmental variables, such as water temperature, salinity, nutrient concentrations, or pollutant levels, provided that the values are non-negative. For example, researchers can use `PrecisionCalc` to determine how many sediment samples are needed to estimate the mean organic matter content in a coastal study area with a target relative or absolute precision. Similarly, it can be applied to assess how many quadrats are required to estimate the average percent cover of a plant species in a restoration site, of living corals in a reef site or to determine the number of water samples needed to reliably estimate mean nitrate concentrations in a river.
 
@@ -43,7 +43,6 @@ In order to demonstrate the functions we provided tree datasets: `picinguaba`, `
 
 Now, let's see how each function works:
 
-\
 \
 
 ### Vizualizing Distributions (plots)
@@ -68,7 +67,7 @@ temp<-ubatuba$temp
 plot_distributionsC(temp)
 ```
 
-It is clear that the best fitted distribution (or least worst) is the normal one. Probably, a non-parametric approach should be used for sample size analysis, as we will see later.
+The best fitted distribution (or least worst) is the normal one, but not quite different from others. Probably, a non-parametric approach should be used for sample size analysis, as we will see later.
 
 \
 
@@ -123,6 +122,7 @@ $$n_{\text{adj}} = \frac{n_0}{1 + \frac{n_0 - 1}{N}}$$
 The `relative_sample` parameters are:  **y** = data.vector, **epsilon_rel** desired level of precision (example: 0.2 = 20%), **conf** = level of confidence *(default = 0.95)*, **Discrete** = if is a discrete or a continuous distribution *(default = TRUE)* TRUE and **N** = population size *(default=NULL)*, thus if not provided it means that population is infinite.
 
 What is the sample size for estimate the mean of the polychaete *Lumbrineris curtolobata* in shallow waters of Picinguaba with a precision of at least 20%:
+
 ```{r example_relative, warning=FALSE}
 relative_sample(picinguaba$Lumbrineris, 0.2, Discrete = TRUE)
 ```
@@ -132,6 +132,7 @@ As demonstrated above, the *L. curtolobata* data followed a negative binomial di
 But consider that the shallow area is very restricted, thus the population is finite with only 300 possible sampling units covering the entire area. In this case, we would include the finite population size as shown below:
 
 What is the sample size for the same species and precision but considering a finite population of N=300: 
+
 ```{r}
 relative_sample(picinguaba$Lumbrineris, epsilon_rel = 0.2, Discrete = TRUE, N=300)
 ```
@@ -145,6 +146,7 @@ The `relative_sample_zip` function extends the `relative_sample` function for di
 The `absolute_sample` parameters are:  **y** = data.vector, **epsilon** desired level of precision (exemple 2, meaning $mean \pm 2$ plus or less than the mean), **conf** = level of confidence *(default = 0.95)*, **Discrete** = if is a discrete or a continuous distribution *(default = TRUE)* TRUE and **N** = population size *(default=NULL)*, thus if not provided it means that population is infinite.
 
 What is the sample size to assess the mean number of species (S) in ubatuba with an error (precision) of only 2 species: 
+
 ```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=7, fig.heigth=4}
 plot_distributionsD(ubatuba$S)
 absolute_sample(ubatuba$S, epsilon = 2) ## Discrete 
@@ -179,7 +181,7 @@ Notice that the number of samples (in the NegBinom distribution - see plot) in t
 \
 
 ### Binomial and Beta sampling size
-Now we move to cases where the data are neither counts nor continuous, but expressed as percentages or occurrence data (presence/absence data). These types of data have their own typical distributions: **beta distribution** for percentages (e.g., 0.32, 0.01, but always >0 and <1) and **binomial distribution** for presence/absence data (0 or 1), where presence = 1 and absence = 0. For the beta distribution, values of 0 and 1 are not acceptable. However, the function includes the transformation of Smithson & Verkuilen (2006), which allows the use of the beta distribution with 0/1 values: $$x = (x * (n - 1) + 0.5) / n$$ Examples of beta-distributed data include the *content of fine sand*in the sediment (see variable **af** in the Ubatuba dataset) and **Buz_Cover**, which represents the percentage of canopy cover of *Sargassum* spp.on Búzios Island in the `sargassum` dataset.
+Now we move to cases where the data are neither counts nor continuous, but expressed as percentages or occurrence data (presence/absence data). These types of data have their own typical distributions: **beta distribution** for percentages (e.g., 0.32, 0.01, but always >0 and <1) and **binomial distribution** for presence/absence data (0 or 1), where presence = 1 and absence = 0. For the beta distribution, values of 0 and 1 are not acceptable. However, the function includes the transformation of Smithson & Verkuilen (2006), which allows the use of the beta distribution with 0/1 values: $$x = (x * (n - 1) + 0.5) / n$$ Examples of beta-distributed data include the *content of fine sand*in the sediment (see variable **fs** in the Ubatuba dataset) and **Buz_Cover**, which represents the percentage of canopy cover of *Sargassum* spp.on Búzios Island in the `sargassum` dataset.
 
 Both functions use, by default, absolute precision. This is because the mean is already expressed as percent/proportion — i.e., mean percentage in the **beta** case, and mean probability (p) of occurrence in the **binomial** case. It is therefore more plausible to express the results as a range of probabilities or percentages than to calculate a percentage of a percentage. For instance, in a political poll, when it is reported that candidate X has 20% of the intended votes, the margin of error is typically 2%. This means the range is 2% more or less than the mean, i.e., [18%, 22%]. If relative precision is desired, one can change the default using the argument relative = TRUE.
 
@@ -202,7 +204,7 @@ $$n_{\text{adj}} = \frac{n_0}{1 + \frac{n_0 - 1}{N}}$$
 <center> where $N$ = finite population size and $n_{\text{adj}}$ = finite population correction </center>
 \
 
-#### Beta sample
+#### Sampling beta data
 In most practical cases, `sample_size_beta` produces sample size estimates similar to those obtained under the normal approximation (see the absolute_sample function). Nonetheless, the beta distribution tends to provide more accurate and realistic estimates when the true proportions are close to the limits of the parameter space (e.g., 0.02, 0.05, 0.89, 0.98). Conversely, when proportions are moderate (around 0.3–0.7), the difference between the two approaches is usually negligible.
 
 Therefore, the `sample_size_beta` function is mainly provided as a complementary option. While the resulting sample size estimates (n0 or n_adj) are useful, the corresponding symmetric confidence intervals should be interpreted with caution, as they can become unreliable or meaningless when extending beyond the valid [0, 1] range. 
@@ -221,11 +223,12 @@ Thus for a beta distribution with alpha=3 and beta=2 the mean is 0.6 and the req
 
 \
 
-#### Binomial sample
+#### Sampling binomial data
 
 While binomial data can be approximated by a normal distribution when the sample size is large and the probability of success *p* (percentage of occurrences) is  close to the boundaries, it is more appropriate to apply the `sample_size_binomial` function, particularly when *p* is near 0 or 1. This occurs when working with, for instance, species with rare occurrences (*p* very low) or very abundant ones (*p* very high). In such cases, `sample_size_binomial` is recommended. However, since it uses a symmetric confidence interval based on the normal approximation, it may produce intervals with negative values or values exceeding 1 (outside the [0,1] boundaries), which are theoretically impossible for probabilities. Despite this limitation, the calculated sample size remains useful for study planning.
 
-What is the sample size for estimate the mean of the polychaete *Lumbrineris curtolobata* in shallow waters of Picinguaba with a precision of at least 10%: 
+What is the sample size for estimate the frequency of occurrence of *Sargassum* spp. in the rock bottons of Itanhangá Island with an absolute precision of at least 10%? Fot that we are using the **Ita_PA** data of presence/absence(1/0):
+
 ```{r warning=FALSE}
 sample_size_binomial(sargassum$Ita_PA, epsilon=0.1)
 ```
@@ -402,7 +405,10 @@ N  <- 200  # total population size
 finite_population_correction(n0, N)
 ```
 
-### REFERENCES 
+
+`PrecisionCalc` was developed with the goal of providing a robust and reliable tool for students or professionals who depend on precise and repetitive calculations in their daily work. Through its intuitive interface and functionalities, it is expected that users will be able to perform their tasks with greater speed and a lower margin of error. I hope your experience with `PrecisionCalc` is productive and that this tool contributes to the success of your study and research projects.
+
+### References
 
 1. Carneiro, I.M., Paiva, P.C., Bertocci, I. & Széchy, M.T.M. (2020). Reconciling vertical and horizontal variability in Sargassum populations for improved environmental monitoring. *Journal of Applied Phycology*, 32:717–728. https://doi.org/10.1007/s10811-019-01882-x
 2. Cochran, W. G. (1977). *Sampling Techniques* (3rd ed.). New York: John Wiley & Sons.
